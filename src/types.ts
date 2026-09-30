@@ -1,5 +1,13 @@
 export type MasteryLevel = 'new' | 'learning' | 'review' | 'mastered';
 
+export interface VisualMnemonic {
+  scene: string; // Cảnh tượng liên tưởng hình ảnh sinh động (Visual memory scene)
+  clue?: string; // Mẹo âm thanh tương tự hoặc bắc cầu từ vựng
+  icon?: string; // Emoji gợi nhớ trực quan
+  accentColor?: string; // Màu sắc chủ đạo (e.g. 'amber', 'emerald', 'indigo', 'rose')
+  imageUrl?: string; // Đường dẫn ảnh nếu có
+}
+
 export interface Flashcard {
   id: string;
   word: string;
@@ -16,6 +24,8 @@ export interface Flashcard {
   masteryLevel: MasteryLevel;
   lastReviewed?: string;
   nextReviewDate?: string;
+  imageUrl?: string;
+  visualMnemonic?: VisualMnemonic;
 }
 
 export type EnglishLevel = 'A1-A2' | 'B1-B2' | 'C1-C2' | 'IELTS' | 'TOEIC' | 'Business';
@@ -59,6 +69,6 @@ export interface UserProgress {
   lastActiveDate: string; // YYYY-MM-DD
   totalCardsReviewed: number;
   todayCardsReviewed: number;
-  todayDateStr: string;
-  dailyGoal: number; // e.g., 6 cards/day
+  dailyGoal: number;
+  todayDateStr?: string;
 }

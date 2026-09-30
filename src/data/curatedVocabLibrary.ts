@@ -1,3 +1,6 @@
+import { VisualMnemonic } from '../types';
+import { getVisualMnemonicForWord } from './visualMnemonicService';
+
 export interface CuratedCardItem {
   word: string;
   phonetic: string;
@@ -9,6 +12,7 @@ export interface CuratedCardItem {
   collocations: string[];
   level: string; // 'A1-A2' | 'B1-B2' | 'C1-C2' | 'IELTS' | 'TOEIC' | 'Business'
   category: string; // 'daily' | 'work' | 'travel' | 'ielts' | 'cafe' | 'tech' | 'idioms' | 'general'
+  visualMnemonic?: VisualMnemonic;
 }
 
 export const CURATED_VOCABULARY: CuratedCardItem[] = [
@@ -654,6 +658,9 @@ export function getCuratedFallbackCards(
   return {
     topicTitle,
     level: safeLevel,
-    cards: selected.map(({ category, ...rest }) => rest),
+    cards: selected.map(({ category, ...rest }) => ({
+      ...rest,
+      visualMnemonic: rest.visualMnemonic || getVisualMnemonicForWord(rest.word, rest.vietnameseMeaning, category),
+    })),
   };
 }

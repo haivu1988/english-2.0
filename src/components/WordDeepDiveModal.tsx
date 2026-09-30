@@ -82,6 +82,27 @@ export const WordDeepDiveModal: React.FC<WordDeepDiveModalProps> = ({
 
         {/* Content Body */}
         <div className="p-4 overflow-y-auto space-y-4 text-xs">
+          {/* Word Definition / User Image Header */}
+          <div className="flex flex-col items-center justify-center p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
+            {card.imageUrl && (
+              <div className="w-36 h-24 rounded-xl overflow-hidden border border-slate-200 shadow-2xs mb-2">
+                <img
+                  src={card.imageUrl}
+                  alt={card.word}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <p className="text-sm font-bold text-slate-900">
+              {card.vietnameseMeaning}
+            </p>
+            {card.phonetic && (
+              <p className="text-xs font-mono text-indigo-600 mt-0.5">
+                {card.phonetic}
+              </p>
+            )}
+          </div>
+
           {loading && (
             <div className="p-8 text-center flex flex-col items-center space-y-3">
               <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />

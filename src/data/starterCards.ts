@@ -28,6 +28,12 @@ export const initialCards: Flashcard[] = [
     dateAdded: todayStr,
     reviewCount: 0,
     masteryLevel: 'new',
+    visualMnemonic: {
+      icon: '🛋️⏰',
+      accentColor: 'amber',
+      scene: 'Một chú mèo đeo kính thảnh thơi nằm đung đưa trên võng nhâm nhi nước quả, trong khi trước mặt là núi tài liệu cần nộp và đồng hồ báo thức rung chuông liên hồi.',
+      clue: 'Pro (chuyên gia) + crast (chần chừ) = Chuyên gia trì hoãn deadline!',
+    },
   },
   {
     id: 'card-2',
@@ -43,6 +49,12 @@ export const initialCards: Flashcard[] = [
     dateAdded: todayStr,
     reviewCount: 0,
     masteryLevel: 'new',
+    visualMnemonic: {
+      icon: '🌱⚡',
+      accentColor: 'emerald',
+      scene: 'Một mầm cây xanh mướt mạnh mẽ đâm chồi vươn lên qua khe nứt của tảng đá hoa cương sau cơn bão lớn, nở ra một bông hoa rực rỡ.',
+      clue: 'Re-silient: Giống như quả bóng cao su càng ném mạnh xuống đất càng nảy bật lên cao!',
+    },
   },
   {
     id: 'card-3',
@@ -58,6 +70,12 @@ export const initialCards: Flashcard[] = [
     dateAdded: todayStr,
     reviewCount: 0,
     masteryLevel: 'new',
+    visualMnemonic: {
+      icon: '🛏️🌙',
+      accentColor: 'indigo',
+      scene: 'Một chú gấu sau một ngày dài làm việc mệt nhoài, bay vút lên không trung rồi hạ cánh êm ái xuống chiếc đệm bao tải ngập tràn lông vũ và sao đêm.',
+      clue: 'Sack = bao tải rơm làm đệm của người xưa -> Hit the sack = ngả lưng chìm vào giấc ngủ!',
+    },
   },
   {
     id: 'card-4',
@@ -73,6 +91,12 @@ export const initialCards: Flashcard[] = [
     dateAdded: todayStr,
     reviewCount: 0,
     masteryLevel: 'new',
+    visualMnemonic: {
+      icon: '🎒🚗',
+      accentColor: 'rose',
+      scene: 'Hai người bạn đang ngồi uống trà sữa thì bất chợt nhìn nhau, xách ngay balo nhảy lên xe phóng thẳng ra biển ngắm hoàng hôn mà không hề chuẩn bị trước.',
+      clue: 'Spontaneous: Giống như ngọn lửa bùng lên ngẫu hứng, thích là làm ngay!',
+    },
   },
   {
     id: 'card-5',
@@ -88,6 +112,12 @@ export const initialCards: Flashcard[] = [
     dateAdded: todayStr,
     reviewCount: 0,
     masteryLevel: 'new',
+    visualMnemonic: {
+      icon: '⚖️🚧',
+      accentColor: 'blue',
+      scene: 'Một chú chim bồ câu ngồi đong đưa thăng bằng trên đỉnh hàng rào gỗ, nhìn sang trái là đĩa ngũ cốc, nhìn sang phải là đĩa bánh mì, mắt đảo liên hồi chưa biết sà xuống bên nào.',
+      clue: 'Fence = hàng rào -> Ngồi trên hàng rào chân lắc lư = lưỡng lự 50/50 chưa ngã ngũ!',
+    },
   },
   {
     id: 'card-6',
@@ -103,5 +133,11 @@ export const initialCards: Flashcard[] = [
     dateAdded: todayStr,
     reviewCount: 0,
     masteryLevel: 'new',
+    visualMnemonic: {
+      icon: '🌊📚',
+      accentColor: 'violet',
+      scene: 'Một chú thỏ ngồi tại bàn làm việc bị cả cơn sóng thần sách vở, giấy nhớ và thông báo email ập tới ngập đến tận mang tai, hai mắt xoay tròn.',
+      clue: 'Over (vượt quá) + Whelm (sóng ập tới nhấn chìm) = Quá tải, ngợp đầu ngợp cổ!',
+    },
   },
 ];

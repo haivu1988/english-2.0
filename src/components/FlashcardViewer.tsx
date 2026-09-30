@@ -12,15 +12,21 @@ import {
   HelpCircle,
   BookOpen,
   VolumeX,
+  Image as ImageIcon,
+  Plus,
+  Trash2,
+  Edit3,
 } from 'lucide-react';
 import { Flashcard, MasteryLevel } from '../types';
 import { speakEnglish } from '../utils/speech';
+import { AddImageModal } from './AddImageModal';
 
 interface FlashcardViewerProps {
   cards: Flashcard[];
   onGradeCard: (cardId: string, level: MasteryLevel) => void;
   onOpenPractice: (card: Flashcard) => void;
   onOpenDeepDive: (card: Flashcard) => void;
+  onUpdateCard?: (updatedCard: Flashcard) => void;
 }
 
 export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
@@ -28,10 +34,12 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
   onGradeCard,
   onOpenPractice,
   onOpenDeepDive,
+  onUpdateCard,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isAddImageModalOpen, setIsAddImageModalOpen] = useState(false);
 
   // Keyboard navigation & shortcuts
   useEffect(() => {
@@ -112,6 +120,29 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
     setTimeout(() => setIsPlayingAudio(false), 1200);
   };
 
+  const handleSaveImage = (cardId: string, imageUrl: string | undefined) => {
+    if (!currentCard || currentCard.id !== cardId) return;
+    const updatedCard: Flashcard = {
+      ...currentCard,
+      imageUrl,
+    };
+    if (onUpdateCard) {
+      onUpdateCard(updatedCard);
+    }
+  };
+
+  const handleRemoveImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!currentCard) return;
+    const updatedCard: Flashcard = {
+      ...currentCard,
+      imageUrl: undefined,
+    };
+    if (onUpdateCard) {
+      onUpdateCard(updatedCard);
+    }
+  };
+
   return (
     <div className="w-full max-w-md mx-auto px-4 py-2 flex flex-col items-center">
       {/* Top Bar: Progress counter & controls */}
@@ -139,7 +170,7 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
 
       {/* 3D Flip Card Container */}
       <div
-        className="w-full h-[410px] perspective-1000 cursor-pointer select-none relative"
+        className="w-full h-[450px] sm:h-[470px] perspective-1000 cursor-pointer select-none relative"
         onClick={handleFlipCard}
       >
         {/* Layered Card Shadows (Stacked aesthetic) */}
@@ -152,7 +183,7 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
           }`}
         >
           {/* FRONT SIDE */}
-          <div className="absolute inset-0 w-full h-full backface-hidden bg-white border border-slate-200/80 rounded-[28px] shadow-[0_12px_36px_rgba(15,23,42,0.08)] p-6 flex flex-col justify-between">
+          <div className="absolute inset-0 w-full h-full backface-hidden bg-white border border-slate-200/80 rounded-[28px] shadow-[0_12px_36px_rgba(15,23,42,0.08)] p-5 sm:p-6 flex flex-col justify-between">
             {/* Front Header */}
             <div className="flex items-center justify-between">
               <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 border border-slate-200/60">
@@ -173,19 +204,73 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
               </button>
             </div>
 
-            {/* Front Main Content: Word & Phonetic */}
-            <div className="my-auto text-center flex flex-col items-center justify-center space-y-2">
+            {/* Front Main Content: Word, Phonetic & User Image / Add Image */}
+            <div className="my-auto text-center flex flex-col items-center justify-center space-y-2 py-1">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
                 {currentCard.word}
               </h2>
               {currentCard.phonetic && (
-                <p className="text-sm sm:text-base font-mono font-medium text-indigo-600 bg-indigo-50/70 px-3 py-0.5 rounded-full border border-indigo-100">
+                <p className="text-xs sm:text-sm font-mono font-medium text-indigo-600 bg-indigo-50/70 px-3 py-0.5 rounded-full border border-indigo-100">
                   {currentCard.phonetic}
                 </p>
               )}
 
+              {/* User Custom Image or Add Image Button */}
+              {currentCard.imageUrl ? (
+                <div className="relative group my-2">
+                  <div className="w-52 h-32 sm:w-60 sm:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-xs bg-slate-50 flex items-center justify-center">
+                    <img
+                      src={currentCard.imageUrl}
+                      alt={currentCard.word}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-200"
+                    />
+                  </div>
+                  {/* Floating Action buttons on image */}
+                  <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsAddImageModalOpen(true);
+                      }}
+                      className="p-1.5 rounded-lg bg-black/60 hover:bg-black/80 text-white backdrop-blur-xs transition-colors shadow-xs"
+                      title="Đổi ảnh khác"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="p-1.5 rounded-lg bg-rose-600/80 hover:bg-rose-700 text-white backdrop-blur-xs transition-colors shadow-xs"
+                      title="Xóa ảnh"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="my-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsAddImageModalOpen(true);
+                    }}
+                    className="px-4 py-2.5 rounded-2xl border-2 border-dashed border-indigo-200 hover:border-indigo-400 bg-indigo-50/40 hover:bg-indigo-50/90 text-indigo-700 transition-all flex items-center gap-2 text-xs font-semibold group active:scale-95 shadow-2xs"
+                  >
+                    <div className="w-6 h-6 rounded-lg bg-white border border-indigo-200 flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform shadow-2xs">
+                      <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
+                    <span className="flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5" />
+                      <span>Thêm ảnh cho từ này</span>
+                    </span>
+                  </button>
+                </div>
+              )}
+
               {/* Subtle sample context preview */}
-              <p className="text-xs text-slate-400 italic max-w-xs line-clamp-2 pt-2">
+              <p className="text-xs text-slate-400 italic max-w-xs line-clamp-2 pt-1">
                 &ldquo;{currentCard.exampleSentence}&rdquo;
               </p>
             </div>
@@ -228,6 +313,77 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
                 <p className="text-base sm:text-lg font-bold text-emerald-950 leading-snug">
                   {currentCard.vietnameseMeaning}
                 </p>
+              </div>
+
+              {/* User Image & Visual Memory Section */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                    <ImageIcon className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Hình ảnh học tập</span>
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsAddImageModalOpen(true);
+                    }}
+                    className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-indigo-600 hover:bg-indigo-50 active:scale-95 transition-all flex items-center gap-1 shadow-2xs"
+                  >
+                    {currentCard.imageUrl ? (
+                      <>
+                        <Edit3 className="w-3 h-3" />
+                        <span>Đổi ảnh</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-3 h-3" />
+                        <span>Thêm ảnh</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {currentCard.imageUrl ? (
+                  <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-2.5 rounded-xl border border-slate-200/70">
+                    <div className="w-24 h-20 rounded-lg overflow-hidden shrink-0 border border-slate-100 bg-slate-50">
+                      <img
+                        src={currentCard.imageUrl}
+                        alt={currentCard.word}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="text-xs text-slate-600 space-y-1">
+                      {currentCard.visualMnemonic?.scene && (
+                        <p className="italic leading-relaxed">
+                          &ldquo;{currentCard.visualMnemonic.scene}&rdquo;
+                        </p>
+                      )}
+                      {currentCard.memoryTip && (
+                        <p className="text-amber-800 font-medium text-[11px]">
+                          💡 {currentCard.memoryTip}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsAddImageModalOpen(true);
+                    }}
+                    className="p-3 rounded-xl border border-dashed border-slate-300 hover:border-indigo-400 bg-white hover:bg-indigo-50/30 text-center cursor-pointer transition-colors"
+                  >
+                    <p className="text-xs font-semibold text-slate-700 flex items-center justify-center gap-1.5">
+                      <Plus className="w-3.5 h-3.5 text-indigo-600" />
+                      <span>Chưa có hình ảnh &ndash; Nhấn để thêm ảnh của bạn</span>
+                    </p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Tải ảnh minh họa bạn thích từ máy hoặc dán link ảnh
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Example Sentence with audio */}
@@ -359,6 +515,16 @@ export const FlashcardViewer: React.FC<FlashcardViewerProps> = ({
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>
+
+      {/* User Add / Change Image Modal */}
+      {currentCard && (
+        <AddImageModal
+          card={currentCard}
+          isOpen={isAddImageModalOpen}
+          onClose={() => setIsAddImageModalOpen(false)}
+          onSaveImage={handleSaveImage}
+        />
+      )}
     </div>
   );
 };

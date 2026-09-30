@@ -276,7 +276,7 @@ export const DailyReviewSection: React.FC<DailyReviewSectionProps> = ({
               </div>
 
               {/* Target Word */}
-              <div className="py-5 text-center bg-slate-50/80 rounded-2xl border border-slate-200/60">
+              <div className="py-4 text-center bg-slate-50/80 rounded-2xl border border-slate-200/60 flex flex-col items-center">
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">
                   Chọn nghĩa đúng của từ:
                 </p>
@@ -291,9 +291,20 @@ export const DailyReviewSection: React.FC<DailyReviewSectionProps> = ({
                     <Volume2 className="w-4 h-4" />
                   </button>
                 </div>
-                <span className="text-xs font-mono text-indigo-600">
+                <span className="text-xs font-mono text-indigo-600 mb-2">
                   {currentQuizCard.phonetic}
                 </span>
+
+                {/* User image if available under the quiz word */}
+                {currentQuizCard.imageUrl && (
+                  <div className="my-1.5 w-24 h-20 rounded-xl overflow-hidden border border-slate-200 shadow-2xs">
+                    <img
+                      src={currentQuizCard.imageUrl}
+                      alt={currentQuizCard.word}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Options */}

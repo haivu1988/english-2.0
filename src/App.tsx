@@ -11,6 +11,7 @@ import { CloudAccountModal } from './components/CloudAccountModal';
 import { OnboardingModal, TOPIC_OPTIONS } from './components/OnboardingModal';
 import { AccountSection } from './components/AccountSection';
 import { getCuratedFallbackCards } from './data/curatedVocabLibrary';
+import { getVisualMnemonicForWord } from './data/visualMnemonicService';
 import { Deck, Flashcard, MasteryLevel, UserProgress, UserPreferences, EnglishLevel } from './types';
 import {
   loadSavedCards,
@@ -326,6 +327,7 @@ export default function App() {
             exampleTranslation: c.exampleTranslation || '',
             memoryTip: c.memoryTip || '',
             collocations: c.collocations || [],
+            visualMnemonic: c.visualMnemonic || getVisualMnemonicForWord(c.word || '', c.vietnameseMeaning, topicQuery),
             deckId,
             dateAdded: todayStr,
             reviewCount: 0,
@@ -355,6 +357,10 @@ export default function App() {
     setCards((prev) => [...newCards, ...prev]);
     setActiveDeckId(newDeck.id);
     setActiveTab('learn');
+  };
+
+  const handleUpdateCard = (updatedCard: Flashcard) => {
+    setCards((prev) => prev.map((c) => (c.id === updatedCard.id ? updatedCard : c)));
   };
 
   const handleSelectDeck = (deckId: string) => {
@@ -415,6 +421,7 @@ export default function App() {
         exampleTranslation: c.exampleTranslation || '',
         memoryTip: c.memoryTip || '',
         collocations: c.collocations || [],
+        visualMnemonic: c.visualMnemonic || getVisualMnemonicForWord(c.word || '', c.vietnameseMeaning, topicItem.id),
         deckId,
         dateAdded: todayStr,
         reviewCount: 0,
@@ -491,6 +498,7 @@ export default function App() {
           exampleTranslation: c.exampleTranslation || '',
           memoryTip: c.memoryTip || '',
           collocations: c.collocations || [],
+          visualMnemonic: c.visualMnemonic || getVisualMnemonicForWord(c.word || '', c.vietnameseMeaning, topicToGen),
           deckId,
           dateAdded: todayStr,
           reviewCount: 0,
@@ -533,6 +541,7 @@ export default function App() {
         exampleTranslation: c.exampleTranslation || '',
         memoryTip: c.memoryTip || '',
         collocations: c.collocations || [],
+        visualMnemonic: c.visualMnemonic || getVisualMnemonicForWord(c.word || '', c.vietnameseMeaning, topicToGen),
         deckId,
         dateAdded: todayStr,
         reviewCount: 0,
@@ -617,6 +626,7 @@ export default function App() {
               onGradeCard={handleGradeCard}
               onOpenPractice={(card) => setPracticeCard(card)}
               onOpenDeepDive={(card) => setDeepDiveCard(card)}
+              onUpdateCard={handleUpdateCard}
             />
 
             {/* Quick Stats Pill Strip */}

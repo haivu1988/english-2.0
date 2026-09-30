@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Loader2, BookOpen, AlertCircle, Wand2, Check, Zap } from 'lucide-react';
 import { Deck, Flashcard, EnglishLevel, UserPreferences } from '../types';
 import { getCuratedFallbackCards } from '../data/curatedVocabLibrary';
+import { getVisualMnemonicForWord } from '../data/visualMnemonicService';
 
 interface GenerateDeckSectionProps {
   existingWords: string[];
@@ -78,6 +79,7 @@ export const GenerateDeckSection: React.FC<GenerateDeckSectionProps> = ({
         exampleTranslation: c.exampleTranslation || '',
         memoryTip: c.memoryTip || '',
         collocations: c.collocations || [],
+        visualMnemonic: c.visualMnemonic || getVisualMnemonicForWord(c.word || '', c.vietnameseMeaning, topicName),
         deckId,
         dateAdded: todayStr,
         reviewCount: 0,
